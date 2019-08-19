@@ -18,7 +18,7 @@
 
     <div class="container mb-5 pb-5" id="app">
 
-      <ul class="nav my-3 d-flex justify-content-end">
+      {{-- <ul class="nav my-3 d-flex justify-content-end">
         <li class="nav-item">
           <a class="nav-link active" href="#">Active</a>
         </li>
@@ -28,7 +28,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>
         </li>
-      </ul>
+      </ul> --}}
 
       @yield('content')
 
