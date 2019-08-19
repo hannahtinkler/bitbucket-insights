@@ -35,6 +35,7 @@
 
         mounted() {
             setInterval(this.watchSettings, 5000);
+            this.disabled = this.refreshing ? true : false;
         },
 
         methods: {

@@ -1753,6 +1753,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     setInterval(this.watchSettings, 5000);
+    this.disabled = this.refreshing ? true : false;
   },
   methods: {
     refreshData: function refreshData() {

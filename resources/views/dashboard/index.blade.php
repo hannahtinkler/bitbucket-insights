@@ -6,7 +6,7 @@
   <h1 class="mx-3">Bitbucket Insights</h1>
 
   <refresh-data
-    refreshing="{{ $settings->value('currently_refreshing') }}"
+    :refreshing="{{ (int) $settings->value('currently_refreshing') }}"
     last-refreshed="{{ $settings->value('last_refresh') }}"
   />
 </div>
