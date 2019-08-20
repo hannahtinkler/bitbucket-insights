@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="jumbotron px-5 mb-5">
+<div class="jumbotron px-5 mb-5 mt-4">
   <h1 class="mx-3">Bitbucket Insights</h1>
 
   <refresh-data
