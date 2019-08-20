@@ -46,6 +46,13 @@
             watchSettings() {
                 axios.get('/ajax/settings')
                     .then(({ data }) => {
+                        if (!data.currently_refreshing && data.last_refresh != this.refreshedTime) {
+                            window.location.reload();
+                        }
+
+                        return data;
+                    })
+                    .then(data => {
                         this.disabled = data.currently_refreshing;
                         this.refreshedTime = data.last_refresh;
                     });

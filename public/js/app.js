@@ -1764,6 +1764,13 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/ajax/settings').then(function (_ref) {
         var data = _ref.data;
+
+        if (!data.currently_refreshing && data.last_refresh != _this.refreshedTime) {
+          window.location.reload();
+        }
+
+        return data;
+      }).then(function (data) {
         _this.disabled = data.currently_refreshing;
         _this.refreshedTime = data.last_refresh;
       });
