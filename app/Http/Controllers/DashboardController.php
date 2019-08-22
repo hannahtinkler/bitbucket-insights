@@ -13,6 +13,7 @@ class DashboardController extends Controller
     private $exemptBranchTypes = [
         'candidate',
         'release',
+        'revert',
     ];
 
     /**
