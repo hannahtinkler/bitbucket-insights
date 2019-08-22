@@ -54,6 +54,7 @@ class DashboardController extends Controller
 
                 return !(
                     (count($pullRequest['approvals']) >= 1 && in_array($branchType, $this->exemptBranchTypes)) // Exempt branch
+                        || (count($pullRequest['approvals']) >= 1 && preg_match('/^revert-pr-\d*$/', $branchType)) // Revert branch
                         || (count($nonMergerApprovers) >= 2 && in_array($pullRequest['closed_by']['display_name'], config('services.bitbucket.seniors'))) // Merged by senior and has 2 approvals
                         || (count($nonMergerApprovers) >= 3 && !in_array($pullRequest['closed_by']['display_name'], config('services.bitbucket.seniors'))) // Merged by senior and has 2 approvals
                 );
