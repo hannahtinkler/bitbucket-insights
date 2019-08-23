@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Setting;
+use App\Bitbucket\Api\Client;
 use Illuminate\Console\Command;
-use App\Services\BitbucketService;
 
 class ImportBitbucketData extends Command
 {
@@ -27,7 +27,7 @@ class ImportBitbucketData extends Command
      *
      * @return void
      */
-    public function __construct(BitbucketService $bitbucketService, Setting $setting)
+    public function __construct(Client $bitbucketService, Setting $setting)
     {
         parent::__construct();
 

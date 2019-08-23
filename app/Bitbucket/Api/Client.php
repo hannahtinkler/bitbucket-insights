@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Bitbucket\Api;
 
-use Bitbucket\Client;
 use GuzzleHttp\Client as Guzzle;
+use Bitbucket\Client as Bitbucket;
 use Bitbucket\Exception\ClientErrorException;
 
-class BitbucketService
+class Client
 {
     /**
      * @var Client
@@ -86,10 +86,10 @@ class BitbucketService
     private function bitbucket()
     {
         if (!$this->bitbucket) {
-            $this->bitbucket = new Client;
+            $this->bitbucket = new Bitbucket;
 
             $this->bitbucket()->authenticate(
-                Client::AUTH_HTTP_PASSWORD,
+                Bitbucket::AUTH_HTTP_PASSWORD,
                 config('services.bitbucket.username'),
                 config('services.bitbucket.password')
             );
