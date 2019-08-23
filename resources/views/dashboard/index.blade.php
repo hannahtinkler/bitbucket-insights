@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="jumbotron px-5 mb-5 mt-4">
-  <h1 class="mx-3">Bitbucket Insights</h1>
+<div class="jumbotron px-5 mb-5">
+  <h1 class="mx-3 mb-4">PR Merges</h1>
 
   <refresh-data
     :refreshing="{{ (int) $settings->value('currently_refreshing') }}"

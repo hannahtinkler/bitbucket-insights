@@ -1,0 +1,20 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar__heading {
+    font-size: 22px;
+}
+
+.nav-item {
+    padding: 0.5rem 1rem;
+}
+
+.nav-link {
+    padding: 0 0 0.25rem;
+
+    &.active {
+        border-bottom: 1px solid $blue;
+    }
+}
