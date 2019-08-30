@@ -10654,13 +10654,20 @@ td:last-child {
   padding-right: 0;
 }
 
+th i,
+td i {
+  opacity: 0.3;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
+  padding: 0.5rem 0;
 }
 
 .navbar__heading {
   font-size: 22px;
+  margin-bottom: 0;
 }
 
 .nav-item {

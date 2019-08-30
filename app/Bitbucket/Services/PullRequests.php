@@ -4,42 +4,71 @@ namespace App\Bitbucket\Services;
 
 use Carbon\Carbon;
 
-class Merges
+class PullRequests
 {
+    const STATUS_OPEN = 'bitbucket_pull_requests_unmerged';
+    const STATUS_MERGED = 'bitbucket_pull_requests_merged';
+
     public $data;
     public $branches;
 
     public function __construct(Branches $branches)
     {
-        $this->data = cache()->get('bitbucket_pull_requests_merged');
+        $this->data = cache()->get(self::STATUS_OPEN);
         $this->branches = $branches;
+    }
+
+    public function status(string $status)
+    {
+        $this->data = cache()->get($status);
     }
 
     public function recent($count = 10)
     {
         return $this->data->sortByDesc(function ($merge) {
             return Carbon::parse($merge['updated_on']);
-        })->slice(0, $count);
+        });
     }
 
-    public function users($count = 10)
+    public function reviewers()
+    {
+        return $this->data
+            ->map(function ($merge) {
+                return $merge['approvals'];
+            })
+            ->flatten(1)
+            ->countBy(function ($approval) {
+                return $approval->user->display_name;
+            })
+            ->sort()
+            ->reverse();
+    }
+
+    public function mergers($count = 10)
     {
         return $this->data->countBy(function ($merge) {
             return $merge['closed_by']['display_name'];
-        })->sort()->reverse()->slice(0, $count);
+        })->sort()->reverse();
     }
 
-    public function flagged()
+    public function notReadyForMerge()
     {
         return $this->data->filter(function ($merge) {
             return !$this->hasEnoughApprovals($merge);
         });
     }
 
+    public function readyForMerge()
+    {
+        return $this->data->filter(function ($merge) {
+            return $this->hasEnoughApprovals($merge);
+        });
+    }
+
     public function hasEnoughApprovals(array $merge)
     {
         if ($this->branches->isExempt($merge['source']['branch']['name'])) {
-            return count($merge['approvals']) >= 1;
+            return true;
         } else if ($this->mergedBySenior($merge)) {
             return count($merge['approvals']) >= 3;
         } else if ($this->approvedBySenior($merge)) {

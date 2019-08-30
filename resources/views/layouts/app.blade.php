@@ -12,6 +12,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   </head>
 
   <body>
@@ -24,10 +25,10 @@
 
         <ul class="nav my-3 d-flex justify-content-end">
           <li class="nav-item">
-            <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="#">Reviews</a>
+            <a class="nav-link {{ Request::is('/reviews') ? 'active' : '' }}" href="{{ route('reviews') }}">Open PRs</a>
           </li>
           <li class="nav-item {{ Request::is('/merges') }}">
-            <a class="nav-link" href="#">Merges</a>
+            <a class="nav-link" href="{{ route('merges') }}">Merged PRs</a>
           </li>
         </ul>
       </div>

@@ -35,7 +35,7 @@ class Client
         $query = sprintf('updated_on > "%s"', now()->subDays(7)->format('Y-m-d'));
 
         if ($state) {
-            $query = sprintf('state = "%s" AND ', $state) . $query;
+            $query = sprintf('state = "%s"  ', $state) ;
         }
 
         return collect(
