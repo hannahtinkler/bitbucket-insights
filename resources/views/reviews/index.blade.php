@@ -58,7 +58,7 @@
     </div>
     <div class="col-sm-12 col-lg-4">
       <h2 class="d-flex justify-content-between">
-        Most reviewed
+        Most reviews
 
         <a href="{{ route('reviews.all', 'reviewers') }}">
           <small><i class="fa fa-arrow-right"></i></small>
