@@ -61,7 +61,8 @@ class PullRequests
     public function readyForMerge()
     {
         return $this->data->filter(function ($merge) {
-            return $this->hasEnoughApprovals($merge);
+            return $this->hasEnoughApprovals($merge)
+                && !$this->branches->isExempt($merge['source']['branch']['name']);
         });
     }
 
