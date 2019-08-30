@@ -47,7 +47,7 @@
                 @if($data->first()['closed_by'])
                   <th class="border-top-0">Merger</th>
                 @endif
-                <th class="border-top-0">Approvals</th>
+                <th class="border-top-0 text-right">Approvals</th>
               </tr>
             </thead>
             <tbody>
@@ -73,7 +73,7 @@
                   @if($data->first()['closed_by'])
                     <td>{{ $pullRequest['closed_by']['display_name'] }}</td>
                   @endif
-                  <td>{{ count($pullRequest['approvals']) }}</td>
+                  <td class="text-right">{{ count($pullRequest['approvals']) }}</td>
                 </tr>
               @endforeach
             </tbody>
