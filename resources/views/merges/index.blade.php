@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="jumbotron px-5 mb-5 mt-4">
-  <h1 class="mx-3">Bitbucket Insights</h1>
+<div class="jumbotron px-5 mb-5">
+  <h1 class="mx-3 mb-4">Merged Pull Requests</h1>
 
   <refresh-data
     :refreshing="{{ (int) $settings->value('currently_refreshing') }}"
@@ -14,7 +14,13 @@
 <div class="px-4">
   <div class="row mt-5">
     <div class="col-sm-12">
-      <h2>Flagged Merges</h2>
+      <h2 class="d-flex justify-content-between">
+        Flagged merges
+
+        <a href="{{ route('merges.all', 'not-ready-for-merge') }}">
+          <small><i class="fa fa-arrow-right"></i></small>
+        </a>
+      </h2>
 
       @if($flaggedMerges->isNotEmpty())
         <table class="table mt-4">
@@ -44,12 +50,19 @@
       @else
         <p>Nothing to show!</p>
       @endif
-   </div>
+    </div>
   </div>
 
   <div class="row pt-5">
     <div class="col-sm-12 col-lg-8">
-      <h2>Recent merges</h2>
+      <h2 class="d-flex justify-content-between">
+        Recent merges
+
+        <a href="{{ route('merges.all', 'recent') }}">
+          <small><i class="fa fa-arrow-right"></i></small>
+        </a>
+      </h2>
+
       <table class="table mt-4">
         <thead>
           <tr>
@@ -74,19 +87,26 @@
       </table>
     </div>
     <div class="col-sm-12 col-lg-4">
-      <h2>Most merges</h2>
+      <h2 class="d-flex justify-content-between">
+        Most merges
+
+        <a href="{{ route('merges.all', 'mergers') }}">
+          <small><i class="fa fa-arrow-right"></i></small>
+        </a>
+      </h2>
+
       <table class="table mt-4">
         <thead>
           <tr>
             <th class="border-top-0">Merger</th>
-            <th class="border-top-0">Merged</th>
+            <th class="border-top-0 text-right">Merged</th>
           </tr>
         </thead>
         <tbody>
           @foreach($mostMerges as $merger => $count)
             <tr>
               <td>{{ $merger }}</td>
-              <td>{{ $count }}</td>
+              <td class="text-right">{{ $count }}</td>
             </tr>
           @endforeach
         </tbody>

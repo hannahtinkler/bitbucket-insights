@@ -12,23 +12,26 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/app.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   </head>
 
   <body>
 
     <div class="container mb-5 pb-5" id="app">
+      <div class="navbar">
+        <h1 class="navbar__heading">
+          <a href="/">Bitbucket Insights</a>
+        </h1>
 
-      {{-- <ul class="nav my-3 d-flex justify-content-end">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-      </ul> --}}
+        <ul class="nav my-3 d-flex justify-content-end">
+          <li class="nav-item">
+            <a class="nav-link {{ Request::is('/reviews') ? 'active' : '' }}" href="{{ route('reviews') }}">Open PRs</a>
+          </li>
+          <li class="nav-item {{ Request::is('/merges') }}">
+            <a class="nav-link" href="{{ route('merges') }}">Merged PRs</a>
+          </li>
+        </ul>
+      </div>
 
       @yield('content')
 
