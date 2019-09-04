@@ -11,6 +11,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return redirect()->route('merges');
+        return redirect()->route('reviews');
     }
 }
