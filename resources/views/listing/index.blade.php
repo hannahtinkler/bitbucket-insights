@@ -64,14 +64,14 @@
                           return $approval->user->display_name;
                         }, $pullRequest['approvals']))
 
-                        @if(in_array(auth()->user()->name, $approvers))
-                          <i class="fa fa-thumbs-up ml-1"></i>
-                        @endif
                         @if($pullRequest['comment_count'])
                           <i class="fa fa-comment ml-1"></i>
                         @endif
                         @if($pullRequest['comment_count'])
                           <i class="fa fa-check-square ml-1"></i>
+                        @endif
+                        @if(in_array(auth()->user()->name, $approvers))
+                          <i class="fa fa-thumbs-up ml-1" title="You've approved this one already!"></i>
                         @endif
                       </span>
                     </div>
