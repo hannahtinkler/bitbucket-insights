@@ -35,21 +35,21 @@
               <tr>
                 <td>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ $pullRequest['links']['html']['href'] }}" target="_blank">
-                      {{ str_limit($pullRequest['title'], 50) }}
+                    <a href="{{ $pullRequest->url }}" target="_blank">
+                      {{ str_limit($pullRequest->title, 50) }}
                     </a>
 
                     <span class="mx-3">
-                      @if($pullRequest['comment_count'])
+                      @if($pullRequest->comment_count)
                         <i class="fa fa-comment ml-1"></i>
                       @endif
-                      @if($pullRequest['comment_count'])
+                      @if($pullRequest->task_count)
                         <i class="fa fa-check-square ml-1"></i>
                       @endif
                     </span>
                   </div>
                 </td>
-                <td>{{ $pullRequest['author']['display_name'] }}</td>
+                <td>{{ $pullRequest->author->name }}</td>
               </tr>
             @endforeach
           </tbody>
@@ -98,7 +98,7 @@
           <thead>
             <tr>
               <th class="border-top-0">Pull request</th>
-              <th class="border-top-0">Count</th>
+              <th class="border-top-0">Author</th>
             </tr>
           </thead>
           <tbody>
@@ -106,21 +106,21 @@
               <tr>
                 <td>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ $pullRequest['links']['html']['href'] }}" target="_blank">
-                      {{ str_limit($pullRequest['title'], 30) }}
+                    <a href="{{ $pullRequest->url }}" target="_blank">
+                      {{ str_limit($pullRequest->title, 30) }}
                     </a>
 
                     <span class="ml-3">
-                      @if($pullRequest['comment_count'])
+                      @if($pullRequest->comment_count)
                         <i class="fa fa-comment ml-1"></i>
                       @endif
-                      @if($pullRequest['comment_count'])
+                      @if($pullRequest->task_count)
                         <i class="fa fa-check-square ml-1"></i>
                       @endif
                     </span>
                   </div>
                 </td>
-                <td>{{ $pullRequest['author']['display_name'] }}</td>
+                <td>{{ $pullRequest->author->name }}</td>
               </tr>
             @endforeach
           </tbody>

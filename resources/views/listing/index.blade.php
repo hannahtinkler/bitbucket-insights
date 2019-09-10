@@ -44,7 +44,7 @@
                 <th class="border-top-0">Pull request</th>
                 <th class="border-top-0">Author</th>
 
-                @if($data->first()['closed_by'])
+                @if($data->first()->mergedBy)
                   <th class="border-top-0">Merger</th>
                 @endif
                 <th class="border-top-0 text-right">Approvals</th>
@@ -55,30 +55,30 @@
                 <tr>
                   <td>
                     <div class="d-flex justify-content-between">
-                      <a href="{{ $pullRequest['links']['html']['href'] }}" target="_blank">
-                        {{ str_limit($pullRequest['title'], 50) }}
+                      <a href="{{ $pullRequest->url }}" target="_blank">
+                        {{ str_limit($pullRequest->title, 50) }}
                       </a>
 
                       <span class="mx-3">
-                        @php($approvers = array_map(function ($approval) {
-                          return $approval->user->display_name;
-                        }, $pullRequest['approvals']))
+                        @php($approvers = $pullRequest->approvals->map(function ($approval) {
+                          return $approval->teamMember->name;
+                        }))
 
-                        @if($pullRequest['comment_count'])
+                        @if($pullRequest->comment_count)
                           <i class="fa fa-comment ml-1"></i>
                         @endif
-                        @if($pullRequest['comment_count'])
+                        @if($pullRequest->task_count)
                           <i class="fa fa-check-square ml-1"></i>
                         @endif
-                        @if(in_array(auth()->user()->name, $approvers))
+                        @if($approvers->contains(auth()->user()->name))
                           <i class="fa fa-thumbs-up ml-1" title="You've approved this one already!"></i>
                         @endif
                       </span>
                     </div>
                   </td>
-                  <td>{{ $pullRequest['author']['display_name'] }}</td>
-                  @if($data->first()['closed_by'])
-                    <td>{{ $pullRequest['closed_by']['display_name'] }}</td>
+                  <td>{{ $pullRequest->author->name }}</td>
+                  @if($data->first()->mergedBy)
+                    <td>{{ $pullRequest->mergedBy->name }}</td>
                   @endif
                   <td class="text-right">{{ count($pullRequest['approvals']) }}</td>
                 </tr>

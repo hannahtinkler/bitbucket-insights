@@ -3,93 +3,121 @@
 namespace App\Bitbucket\Services;
 
 use Carbon\Carbon;
+use Bitbucket\Client;
+use App\Models\TeamMember;
+use App\Models\PullRequest;
+use InvalidArgumentException;
 
 class PullRequests
 {
-    const STATUS_OPEN = 'bitbucket_pull_requests_unmerged';
-    const STATUS_MERGED = 'bitbucket_pull_requests_merged';
+    private $branches;
 
-    public $data;
-    public $branches;
+    private $status = 'any';
+
+    private $validStatuses = [
+        'any',
+        'open',
+        'merged',
+    ];
 
     public function __construct(Branches $branches)
     {
-        $this->data = cache()->get(self::STATUS_OPEN);
+        $this->data = collect([]);
         $this->branches = $branches;
+    }
+
+    public function fetchByUser(string $externalId, int $count = 10)
+    {
+        $response = app(Client::class)
+            ->pullRequests()
+            ->list($externalId, [
+                'pagelen' => $count,
+                'q' => 'state = "OPEN" OR state = "MERGED"',
+            ]);
+
+        return collect($response['values']);
     }
 
     public function status(string $status)
     {
-        $this->data = cache()->get($status);
+        if (!in_array($status, $this->validStatuses)) {
+            throw new InvalidArgumentException;
+        }
+
+        $this->status = $status;
+
+        return $this;
     }
 
-    public function recent($count = 10)
+    public function recent()
     {
-        return $this->data->sortByDesc(function ($merge) {
-            return Carbon::parse($merge['updated_on']);
-        });
+        return PullRequest::{$this->status}()->orderByDesc('merged_at')->get();
     }
 
-    public function reviewers()
+    public function mergers()
     {
-        return $this->data
-            ->map(function ($merge) {
-                return $merge['approvals'];
-            })
-            ->flatten(1)
-            ->countBy(function ($approval) {
-                return $approval->user->display_name;
+        return PullRequest::{$this->status}()
+            ->get()
+            ->countBy(function ($pullRequest) {
+                return $pullRequest->mergedBy->name;
             })
             ->sort()
             ->reverse();
     }
 
-    public function mergers($count = 10)
-    {
-        return $this->data->countBy(function ($merge) {
-            return $merge['closed_by']['display_name'];
-        })->sort()->reverse();
-    }
-
     public function notReadyForMerge()
     {
-        return $this->data->filter(function ($merge) {
-            return !$this->hasEnoughApprovals($merge);
-        });
+        return PullRequest::{$this->status}()->get()
+            ->filter(function ($pullRequest) {
+                return !$this->hasEnoughApprovals($pullRequest);
+            });
     }
 
     public function readyForMerge()
     {
-        return $this->data->filter(function ($merge) {
-            return $this->hasEnoughApprovals($merge)
-                && !$this->branches->isExempt($merge['source']['branch']['name']);
-        });
+        return PullRequest::{$this->status}()->get()
+            ->filter(function ($pullRequest) {
+                return $this->hasEnoughApprovals($pullRequest)
+                    && !$this->branches->isExempt($pullRequest->branch);
+            });
     }
 
-    public function hasEnoughApprovals(array $merge)
+    public function hasEnoughApprovals(PullRequest $pullRequest)
     {
-        if ($this->branches->isExempt($merge['source']['branch']['name'])) {
+        if ($this->branches->isExempt($pullRequest->branch)) {
             return true;
-        } else if ($this->mergedBySenior($merge)) {
-            return count($merge['approvals']) >= 3;
-        } else if ($this->approvedBySenior($merge)) {
-            return count($merge['approvals']) >= 3;
+        } else if ($this->mergedBySenior($pullRequest)) {
+            return $pullRequest->approvals->count() >= 3;
+        } else if ($this->approvedBySenior($pullRequest)) {
+            return $pullRequest->approvals->count() >= 3;
         }
 
         return false;
     }
 
-    public function mergedBySenior(array $merge)
+    public function mergedBySenior(PullRequest $pullRequest)
     {
-        return in_array($merge['closed_by']['display_name'], config('services.bitbucket.seniors'));
+        return $pullRequest->merged_by_id
+            ? in_array($pullRequest->mergedBy->name, config('services.bitbucket.seniors'))
+            : null;
     }
 
-    public function approvedBySenior(array $merge)
+    public function approvedBySenior(PullRequest $pullRequest)
     {
-        return array_reduce($merge['approvals'], function ($carry, $approval) {
-            return in_array($approval->user->display_name, config('services.bitbucket.seniors'))
+        return $pullRequest->approvals->reduce(function ($carry, $approval) {
+            return in_array($approval->teamMember->name, config('services.bitbucket.seniors'))
                 ? true
                 : $carry;
         }, false);
+    }
+
+    public function reviewers()
+    {
+        return TeamMember::all()
+            ->mapWithKeys(function ($teamMember) {
+                return [$teamMember->name => $teamMember->approvals->count()];
+            })
+            ->sort()
+            ->reverse();
     }
 }

@@ -1732,7 +1732,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     text: {
@@ -37054,16 +37053,14 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("p", { staticClass: "mx-3" }, [
-      _vm._v("\n        This data is refreshed every 10 minutes.\n        "),
+      _vm._v(
+        "\n        This data is refreshed every minute or so and the last refresh was at " +
+          _vm._s(_vm.refreshedTime) +
+          ".\n        "
+      ),
       _vm.disabled
-        ? _c("span", [
-            _vm._v(
-              "The data is currently refreshing; this may take a few minutes."
-            )
-          ])
-        : _c("span", [
-            _vm._v("The last refresh was at " + _vm._s(_vm.refreshedTime) + ".")
-          ])
+        ? _c("span", [_vm._v("The data is currently refreshing.")])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c(

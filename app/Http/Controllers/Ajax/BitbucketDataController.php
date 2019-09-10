@@ -18,7 +18,8 @@ class BitbucketDataController extends Controller
     public function index()
     {
         if (!$this->setting->value(Setting::CURRENTLY_REFRESHING)) {
-            Artisan::queue('import:bitbucket');
+            Artisan::queue('import:pull-requests');
+            Artisan::queue('import:pull-request-approvals');
         }
 
         return response()->json(['success' => true]);

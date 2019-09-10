@@ -36,13 +36,13 @@
             @foreach($flaggedMerges as $pullRequest)
               <tr>
                 <td>
-                  <a href="{{ $pullRequest['links']['html']['href'] }}" target="_blank">
-                    {{ str_limit($pullRequest['title'], 50) }}
+                  <a href="{{ $pullRequest->url }}" target="_blank">
+                    {{ str_limit($pullRequest->title, 50) }}
                   </a>
                 </td>
-                <td>{{ $pullRequest['author']['display_name'] }}</td>
-                <td>{{ $pullRequest['closed_by']['display_name'] }}</td>
-                <td>{{ count($pullRequest['approvals']) }}</td>
+                <td>{{ $pullRequest->author->name }}</td>
+                <td>{{ $pullRequest->mergedBy->name }}</td>
+                <td>{{ $pullRequest->approvals->count() }}</td>
               </tr>
             @endforeach
           </tbody>
@@ -75,12 +75,12 @@
           @foreach($recentMerges as $pullRequest)
             <tr>
               <td>
-                <a href="{{ $pullRequest['links']['html']['href'] }}" target="_blank">
-                  {{ str_limit($pullRequest['title'], 50) }}
+                <a href="{{ $pullRequest->url }}" target="_blank">
+                  {{ str_limit($pullRequest->title, 40) }}
                 </a>
               </td>
-              <td>{{ $pullRequest['author']['display_name'] }}</td>
-              <td>{{ $pullRequest['closed_by']['display_name'] }}</td>
+              <td>{{ $pullRequest->author->name }}</td>
+              <td>{{ $pullRequest->mergedBy->name }}</td>
             </tr>
           @endforeach
         </tbody>

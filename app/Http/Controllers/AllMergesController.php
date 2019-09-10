@@ -34,8 +34,6 @@ class AllMergesController extends Controller
     {
         $this->setting = $setting;
         $this->pullRequests = $pullRequests;
-
-        $this->pullRequests->status(PullRequests::STATUS_MERGED);
     }
 
     public function index($type)
@@ -48,7 +46,7 @@ class AllMergesController extends Controller
             'settings' => $this->setting,
             'type' => 'Merged',
             'title' => $this->titles[$type] ?? 'Unknown',
-            'data' => $this->pullRequests->$method(),
+            'data' => $this->pullRequests->status('merged')->$method()->slice(0, 100),
         ]);
     }
 }

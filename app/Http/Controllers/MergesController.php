@@ -28,17 +28,15 @@ class MergesController extends Controller
     {
         $this->setting = $setting;
         $this->pullRequests = $pullRequests;
-
-        $this->pullRequests->status(PullRequests::STATUS_MERGED);
     }
 
     public function index()
     {
         return view('merges.index', [
             'settings' => $this->setting,
-            'recentMerges' => $this->pullRequests->recent()->slice(0, 10),
-            'mostMerges' => $this->pullRequests->mergers()->slice(0, 10),
-            'flaggedMerges' => $this->pullRequests->notReadyForMerge()->slice(0, 10),
+            'recentMerges' => $this->pullRequests->status('merged')->recent()->slice(0, 10),
+            'mostMerges' => $this->pullRequests->status('merged')->mergers()->slice(0, 10),
+            'flaggedMerges' => $this->pullRequests->status('merged')->notReadyForMerge()->slice(0, 10),
         ]);
     }
 }

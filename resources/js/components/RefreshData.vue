@@ -1,9 +1,8 @@
 <template>
     <div>
         <p class="mx-3">
-            This data is refreshed every 10 minutes.
-            <span v-if="disabled">The data is currently refreshing; this may take a few minutes.</span>
-            <span v-else>The last refresh was at {{ refreshedTime }}.</span>
+            This data is refreshed every minute or so and the last refresh was at {{ refreshedTime }}.
+            <span v-if="disabled">The data is currently refreshing.</span>
         </p>
 
         <button class="btn btn-lg btn-primary mt-3 mx-3" href="#" role="button" @click="refreshData" :disabled="disabled">

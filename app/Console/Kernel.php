@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Setting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,14 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\ImportBitbucketData::class,
+        \App\Console\Commands\ImportTeamMembers::class,
+        \App\Console\Commands\ImportPullRequests::class,
+        \App\Console\Commands\ImportPullRequestApprovals::class,
+    ];
+
+    private $minutelyCommands = [
+        'import:pull-requests',
+        'import:pull-request-approvals',
     ];
 
     /**
@@ -24,7 +32,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('import:bitbucket')->everyTenMinutes();
+        $schedule->command('import:team-members')->dailyAt('00:00');
+
+        foreach ($this->minutelyCommands as $command) {
+            $schedule
+                ->command($command)
+                ->everyMinute()
+                ->withoutOverlapping()
+                ->before(function () {
+                    app(Setting::class)->set(Setting::CURRENTLY_REFRESHING, true);
+                 })
+                 ->after(function () {
+                    app(Setting::class)->set(Setting::CURRENTLY_REFRESHING, false);
+                    app(Setting::class)->set(Setting::LAST_REFRESH, now()->format('Y-m-d H:i:s'));
+                 });;
+        }
     }
 
     /**

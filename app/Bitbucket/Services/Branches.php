@@ -20,6 +20,6 @@ class Branches
     public function isExempt(string $branch)
     {
         return in_array($this->type($branch), $this->exemptTypes)
-            || preg_match('/^revert-pr-\d*$/', $this->type($branch));
+            || preg_match('/^revert-pr-\d*$/', $branch);
     }
 }

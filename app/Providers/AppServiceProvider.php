@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Bitbucket\Client;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,8 +12,18 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function register()
     {
-        //
+        app()->singleton(Client::class, function () {
+            $bitbucket = new Client;
+
+            $bitbucket->authenticate(
+                Client::AUTH_HTTP_PASSWORD,
+                config('services.bitbucket.username'),
+                config('services.bitbucket.password')
+            );
+
+            return $bitbucket;
+        });
     }
 }
