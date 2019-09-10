@@ -35,7 +35,7 @@
               <tr>
                 <td>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ $pullRequest->url }}" target="_blank">
+                    <a href="{{ $pullRequest->url }}?w=1" target="_blank">
                       {{ str_limit($pullRequest->title, 50) }}
                     </a>
 
@@ -106,7 +106,7 @@
               <tr>
                 <td>
                   <div class="d-flex justify-content-between">
-                    <a href="{{ $pullRequest->url }}" target="_blank">
+                    <a href="{{ $pullRequest->url }}?w=1" target="_blank">
                       {{ str_limit($pullRequest->title, 30) }}
                     </a>
 

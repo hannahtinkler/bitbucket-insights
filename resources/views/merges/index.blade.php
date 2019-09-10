@@ -36,7 +36,7 @@
             @foreach($flaggedMerges as $pullRequest)
               <tr>
                 <td>
-                  <a href="{{ $pullRequest->url }}" target="_blank">
+                  <a href="{{ $pullRequest->url }}?w=1" target="_blank">
                     {{ str_limit($pullRequest->title, 50) }}
                   </a>
                 </td>
@@ -75,7 +75,7 @@
           @foreach($recentMerges as $pullRequest)
             <tr>
               <td>
-                <a href="{{ $pullRequest->url }}" target="_blank">
+                <a href="{{ $pullRequest->url }}?w=1" target="_blank">
                   {{ str_limit($pullRequest->title, 40) }}
                 </a>
               </td>
