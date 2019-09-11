@@ -10,6 +10,7 @@ trait Skippable
      */
     public function shouldSkip(int $i)
     {
-        return !$this->option('skip') || $i <= $this->option('skip');
+        return !is_null($this->option('skip'))
+            && $i <= $this->option('skip');
     }
 }
