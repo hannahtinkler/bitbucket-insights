@@ -75,7 +75,7 @@ class ImportPullRequestApprovals extends Command
         $pullRequest->approvals->map->delete();
 
         $pullRequestApprovals->each(function ($pullRequestApproval) use ($pullRequest) {
-            $teamMember = TeamMember::whereName($pullRequestApproval['user']['display_name'])->first();
+            $teamMember = TeamMember::withoutGlobalScope('active')->whereName($pullRequestApproval['user']['display_name'])->first();
 
             PullRequestApproval::create([
                 'pull_request_id' => $pullRequest->id,
