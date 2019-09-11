@@ -66,7 +66,7 @@ class ImportPullRequests extends Command
     private function updatePullRequestData(Collection $pullRequests)
     {
         $pullRequests->each(function ($pullRequest) {
-            $mergedBy = TeamMember::whereName($pullRequest['closed_by']['display_name'])->first();
+            $mergedBy = TeamMember::withoutGlobalScope('active')->whereName($pullRequest['closed_by']['display_name'])->first();
             $author = TeamMember::whereName($pullRequest['author']['display_name'])->first();
 
             if (!$author) {
