@@ -6,15 +6,18 @@ use Carbon\Carbon;
 use App\Models\TeamMember;
 use App\Models\PullRequest;
 use Illuminate\Console\Command;
+use App\Console\Traits\Skippable;
 use Illuminate\Support\Collection;
 use App\Bitbucket\Services\PullRequests;
 
 class ImportPullRequests extends Command
 {
+    use Skippable;
+
     /**
      * @var string
      */
-    protected $signature = 'import:pull-requests {--count=}';
+    protected $signature = 'import:pull-requests {--count=} {--skip=}';
 
     /**
      * @var string
@@ -44,13 +47,15 @@ class ImportPullRequests extends Command
         $this->bar = $this->output->createProgressBar($teamMembers->count());
         $this->bar->start();
 
-        $teamMembers->each(function ($teamMember) {
-            $this->updatePullRequestData(
-                $this->pullRequests->fetchByUser(
-                    $teamMember['external_id'],
-                    $this->option('count') ?: 10
-                )
-            );
+        $teamMembers->each(function ($teamMember, $i) {
+            if (!$this->shouldSkip($i)) {
+                $this->updatePullRequestData(
+                    $this->pullRequests->fetchByUser(
+                        $teamMember['external_id'],
+                        $this->option('count') ?: 10
+                    )
+                );
+            }
 
             $this->bar->advance();
         });

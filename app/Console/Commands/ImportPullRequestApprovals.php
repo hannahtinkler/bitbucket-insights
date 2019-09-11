@@ -5,16 +5,19 @@ namespace App\Console\Commands;
 use App\Models\TeamMember;
 use App\Models\PullRequest;
 use Illuminate\Console\Command;
+use App\Console\Traits\Skippable;
 use Illuminate\Support\Collection;
 use App\Models\PullRequestApproval;
 use App\Bitbucket\Services\PullRequestApprovals;
 
 class ImportPullRequestApprovals extends Command
 {
+    use Skippable;
+
     /**
      * @var string
      */
-    protected $signature = 'import:pull-request-approvals {--state=}';
+    protected $signature = 'import:pull-request-approvals {--state=} {--skip=}';
 
     /**
      * @var string
@@ -50,14 +53,16 @@ class ImportPullRequestApprovals extends Command
         $this->bar = $this->output->createProgressBar($pullRequests->count());
         $this->bar->start();
 
-        $pullRequests->each(function ($pullRequest) {
-            $this->updatePullRequestApprovalData(
-                $pullRequest,
-                $this->pullRequestApprovals->fetchByPullRequest(
-                    $pullRequest['repository'],
-                    $pullRequest['external_id']
-                )
-            );
+        $pullRequests->each(function ($pullRequest, $i) {
+            if (!$this->shouldSkip($i)) {
+                $this->updatePullRequestApprovalData(
+                    $pullRequest,
+                    $this->pullRequestApprovals->fetchByPullRequest(
+                        $pullRequest['repository'],
+                        $pullRequest['external_id']
+                    )
+                );
+            }
 
             $this->bar->advance();
         });
