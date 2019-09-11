@@ -51,7 +51,7 @@ class ImportTeamMembers extends Command
 
     private function deleteOldTeamMembers(Collection $apiTeamMembers)
     {
-        TeamMember::all()->filter(function ($teamMember) use ($apiTeamMembers) {
+        TeamMember::withoutGlobalScope('active')->get()->filter(function ($teamMember) use ($apiTeamMembers) {
             return !$apiTeamMembers->pluck('account_id')->contains($teamMember['external_id']);
         })->each(function ($teamMember) {
             $teamMember->delete();
