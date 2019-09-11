@@ -64,6 +64,10 @@ class ImportPullRequests extends Command
             $mergedBy = TeamMember::whereName($pullRequest['closed_by']['display_name'])->first();
             $author = TeamMember::whereName($pullRequest['author']['display_name'])->first();
 
+            if (!$author || !$mergedBy) {
+                return;
+            }
+
             PullRequest::updateOrCreate(
                 [
                     'external_id' => $pullRequest['id'],
