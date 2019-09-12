@@ -16,7 +16,7 @@ class CreatePullRequestsApprovalsTable extends Migration
         Schema::create('pull_request_approvals', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('pull_request_id');
-            $table->integer('team_member_id');
+            $table->integer('team_member_id')->nullable();
             $table->timestamps();
         });
     }

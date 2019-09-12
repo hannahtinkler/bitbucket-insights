@@ -79,7 +79,7 @@ class ImportPullRequestApprovals extends Command
 
             PullRequestApproval::create([
                 'pull_request_id' => $pullRequest->id,
-                'team_member_id' => $teamMember->id,
+                'team_member_id' => optional($teamMember)->id,
             ]);
         });
     }
