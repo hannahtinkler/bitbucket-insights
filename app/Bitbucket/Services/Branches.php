@@ -8,6 +8,7 @@ class Branches
         'candidate',
         'release',
         'revert',
+        'epic',
     ];
 
     public function type(string $branch)
