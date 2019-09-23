@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
         foreach ($this->minutelyCommands as $command) {
             $schedule
                 ->command($command)
-                ->everyMinute()
+                ->everyFiveMinutes()
                 ->withoutOverlapping()
                 ->before(function () {
                     app(Setting::class)->set(Setting::CURRENTLY_REFRESHING, true);
@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
                  ->after(function () {
                     app(Setting::class)->set(Setting::CURRENTLY_REFRESHING, false);
                     app(Setting::class)->set(Setting::LAST_REFRESH, now()->format('Y-m-d H:i:s'));
-                 });;
+                 });
         }
     }
 
